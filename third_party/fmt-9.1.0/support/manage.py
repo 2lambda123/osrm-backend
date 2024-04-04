@@ -281,7 +281,7 @@ def release(args):
                       headers=auth_headers,
                       data=json.dumps({'tag_name': version,
                                        'target_commitish': 'release',
-                                       'body': changes, 'draft': True}))
+                                       'body': changes, 'draft': True}), timeout=60)
     if r.status_code != 201:
         raise Exception('Failed to create a release ' + str(r))
     id = r.json()['id']
@@ -290,7 +290,7 @@ def release(args):
     r = requests.post(
         '{}/{}/assets?name={}'.format(uploads_url, id, package),
         headers={'Content-Type': 'application/zip'} | auth_headers,
-        data=open('build/fmt/' + package, 'rb'))
+        data=open('build/fmt/' + package, 'rb'), timeout=60)
     if r.status_code != 201:
         raise Exception('Failed to upload an asset ' + str(r))
 
