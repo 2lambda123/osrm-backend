@@ -16,12 +16,13 @@
 import os.path
 import sys
 import imp
+import secrets
+
 PY_VERSION = sys.version_info[:2]
 
 import ctypes
 from collections import defaultdict
 import math
-import random
 import timeit
 import unittest
 
@@ -1685,7 +1686,7 @@ def BenchmarkVtableDeduplication(count):
         layouts = set()
         r = list(compat_range(n))
         while len(layouts) < prePop:
-            layouts.add(tuple(sorted(random.sample(r, int(max(1, n / 2))))))
+            layouts.add(tuple(sorted(secrets.SystemRandom().sample(r, int(max(1, n / 2))))))
 
         layouts = list(layouts)
 
@@ -1698,7 +1699,7 @@ def BenchmarkVtableDeduplication(count):
 
         # benchmark deduplication of a new vtable:
         def f():
-            layout = random.choice(layouts)
+            layout = secrets.choice(layouts)
             builder.StartObject(n)
             for j in layout:
                 builder.PrependInt16Slot(j, j, 0)
